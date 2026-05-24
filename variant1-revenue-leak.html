@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Silent Revenue Leak Self-Assessment | Corelytics</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            neon: '#00f5a0',
+            neonDim: '#00c47f',
+            slate950: '#070d18',
+            slate900: '#0d1526',
+            slate800: '#111e35',
+            slate700: '#1a2d4a',
+            slate600: '#243d61',
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+          boxShadow: {
+            neon: '0 0 20px rgba(0, 245, 160, 0.25)',
+            neonLg: '0 0 40px rgba(0, 245, 160, 0.15)',
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    body { background-color: #070d18; }
+    .neon-border { border: 1px solid rgba(0, 245, 160, 0.4); }
+    .neon-border-strong { border: 1px solid rgba(0, 245, 160, 0.8); }
+    .neon-glow { box-shadow: 0 0 30px rgba(0, 245, 160, 0.2), inset 0 0 30px rgba(0, 245, 160, 0.03); }
+    .neon-text { color: #00f5a0; }
+    .gradient-hero { background: radial-gradient(ellipse at top center, rgba(0, 245, 160, 0.06) 0%, transparent 65%); }
+    .gradient-card { background: linear-gradient(135deg, rgba(17, 30, 53, 0.9) 0%, rgba(13, 21, 38, 0.95) 100%); }
+    .badge-pill { background: rgba(0, 245, 160, 0.08); border: 1px solid rgba(0, 245, 160, 0.3); }
+    .stat-card { background: rgba(17, 30, 53, 0.6); border: 1px solid rgba(0, 245, 160, 0.15); }
+    .form-input { background: rgba(7, 13, 24, 0.8); border: 1px solid rgba(0, 245, 160, 0.25); color: #e2e8f0; }
+    .form-input:focus { outline: none; border-color: rgba(0, 245, 160, 0.7); box-shadow: 0 0 15px rgba(0, 245, 160, 0.12); }
+    .form-input::placeholder { color: #4a5568; }
+    .cta-btn { background: linear-gradient(135deg, #00f5a0 0%, #00c47f 100%); color: #070d18; }
+    .cta-btn:hover { background: linear-gradient(135deg, #00ffaa 0%, #00e090 100%); transform: translateY(-1px); box-shadow: 0 8px 30px rgba(0, 245, 160, 0.35); }
+    .erp-badge { background: rgba(26, 45, 74, 0.7); border: 1px solid rgba(0, 245, 160, 0.2); }
+    select option { background: #0d1526; color: #e2e8f0; }
+    .leak-number { background: rgba(0, 245, 160, 0.12); border: 1px solid rgba(0, 245, 160, 0.3); color: #00f5a0; }
+  </style>
+</head>
+<body class="font-sans antialiased text-slate-200 min-h-screen">
+
+  <!-- Nav -->
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-opacity-95 backdrop-blur-md" style="background:#070d18ee; border-bottom: 1px solid rgba(0,245,160,0.1);">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-md neon-border flex items-center justify-center">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M2 12L6 6L10 9L14 3" stroke="#00f5a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span class="text-white font-bold text-lg tracking-tight">Corelytics</span>
+        <span class="text-xs text-slate-500 font-medium ml-1 hidden sm:block">Financial Intelligence Platform</span>
+      </div>
+      <div class="flex items-center gap-4">
+        <a href="#assessment" class="text-sm text-slate-400 hover:text-slate-200 transition-colors hidden md:block">Assessment</a>
+        <a href="#form" class="cta-btn text-sm font-semibold px-5 py-2 rounded-lg transition-all duration-200 cursor-pointer inline-block">Access Diagnostic</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="gradient-hero pt-32 pb-20 px-6 relative overflow-hidden">
+    <div class="max-w-5xl mx-auto text-center relative z-10">
+      <div class="badge-pill inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium neon-text mb-8">
+        <span class="w-2 h-2 rounded-full bg-current animate-pulse"></span>
+        Mid-Market Revenue Intelligence Report 2026
+      </div>
+      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black text-white leading-tight tracking-tight mb-6">
+        Your Financial Reporting<br class="hidden sm:block" />
+        is <span class="neon-text">30 Days Late.</span>
+      </h1>
+      <p class="text-xl sm:text-2xl font-semibold text-slate-300 mb-4 leading-snug">
+        Calculate Exactly Where Your Data Pipeline is Leaking Cash Flow.
+      </p>
+      <p class="text-base sm:text-lg text-slate-400 max-w-3xl mx-auto mb-12 leading-relaxed">
+        Mid-market businesses between $10M and $200M in revenue lose an average of 4 to 7 percent of annual gross profit to financial blind spots that exist between live operations and backward-looking monthly reports. The 12-Question Diagnostic surfaces which categories of leakage are active in your business right now.
+      </p>
+
+      <!-- Stats Row -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto mb-14">
+        <div class="stat-card rounded-xl p-5">
+          <div class="text-3xl font-black neon-text mb-1">30-45</div>
+          <div class="text-sm text-slate-400 font-medium">days average reporting lag at this revenue tier</div>
+        </div>
+        <div class="stat-card rounded-xl p-5">
+          <div class="text-3xl font-black neon-text mb-1">$1.4M+</div>
+          <div class="text-sm text-slate-400 font-medium">annual leakage estimate per $50M in revenue</div>
+        </div>
+        <div class="stat-card rounded-xl p-5">
+          <div class="text-3xl font-black neon-text mb-1">8-15 hrs</div>
+          <div class="text-sm text-slate-400 font-medium">per close cycle spent on manual report builds</div>
+        </div>
+      </div>
+
+      <a href="#form" class="cta-btn inline-block font-bold text-lg px-10 py-4 rounded-xl transition-all duration-200 cursor-pointer">
+        Access the 12-Question Diagnostic
+      </a>
+      <p class="text-sm text-slate-500 mt-4">No credit card required. Instant personalized output by industry and ERP.</p>
+    </div>
+  </section>
+
+  <!-- The Problem -->
+  <section id="assessment" class="py-20 px-6">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-16">
+        <p class="text-xs font-semibold tracking-widest text-slate-500 uppercase mb-4">The Structural Failure</p>
+        <h2 class="text-3xl sm:text-4xl font-black text-white mb-5 leading-tight">Where the Cash Is Actually Going</h2>
+        <p class="text-slate-400 max-w-2xl mx-auto text-base leading-relaxed">
+          The problem is not that your business lacks data. You have more data than you can process. The problem is that the data is backward-looking by the time it reaches your desk.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="gradient-card rounded-2xl p-7 neon-border">
+          <div class="flex items-start gap-4">
+            <div class="leak-number w-10 h-10 rounded-lg flex items-center justify-center text-sm font-bold flex-shrink-0">01</div>
+            <div>
+              <h3 class="text-white font-bold text-lg mb-3">The Manual Extraction Loop</h3>
+              <p class="text-slate-400 text-sm leading-relaxed">Your controller runs scheduled exports from your ERP, pastes them into Excel, applies formula layers built over years of tribal knowledge, and distributes a report that was already stale before the export ran. This is not a one-time event. It is a recurring ritual that costs 8 to 15 hours of skilled finance time per close cycle and introduces cumulative formula errors that surface only when reconciliation fails.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="gradient-card rounded-2xl p-7 neon-border">
+          <div class="flex items-start gap-4">
+            <div class="leak-number w-10 h-10 rounded-lg flex items-center justify-center text-sm font-bold flex-shrink-0">02</div>
+            <div>
+              <h3 class="text-white font-bold text-lg mb-3">The AR Aging Silent Drain</h3>
+              <p class="text-slate-400 text-sm leading-relaxed">Customers paying at net-75 while contracted at net-45 are borrowing working capital from your business at zero interest. When this pattern exists across 15 or 20 customers simultaneously, the aggregate working capital drain can reach seven figures annually without ever appearing as a distinct line item in your P&L. It shows up only as a cash shortfall you did not anticipate.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="gradient-card rounded-2xl p-7 neon-border">
+          <div class="flex items-start gap-4">
+            <div class="leak-number w-10 h-10 rounded-lg flex items-center justify-center text-sm font-bold flex-shrink-0">03</div>
+            <div>
+              <h3 class="text-white font-bold text-lg mb-3">Margin Compression You Learn About Late</h3>
+              <p class="text-slate-400 text-sm leading-relaxed">A raw materials cost spike hits in week one of the month. Your P&L review happens in week six after close. Every job quoted and executed during that window was priced against the wrong cost basis. At $50M in revenue, even a 2 percent margin compression sustained for four to six weeks represents $400,000 to $600,000 in lost gross profit that your reporting never flagged in real time.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="gradient-card rounded-2xl p-7 neon-border">
+          <div class="flex items-start gap-4">
+            <div class="leak-number w-10 h-10 rounded-lg flex items-center justify-center text-sm font-bold flex-shrink-0">04</div>
+            <div>
+              <h3 class="text-white font-bold text-lg mb-3">The Single Point of Failure Problem</h3>
+              <p class="text-slate-400 text-sm leading-relaxed">The Excel reporting model your finance team built over the last three years is maintained by one person. Its logic is undocumented. The formulas reference pivot tables that break when source column headers change after an ERP update. When that person resigns, so does your financial intelligence infrastructure. Most mid-market businesses are one key departure away from a month-end reporting crisis.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Solution Section -->
+  <section class="py-20 px-6" style="background: radial-gradient(ellipse at center, rgba(0,245,160,0.04) 0%, transparent 70%);">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-16">
+        <p class="text-xs font-semibold tracking-widest text-slate-500 uppercase mb-4">Corelytics Platform</p>
+        <h2 class="text-3xl sm:text-4xl font-black text-white mb-5">What Daily Visibility Actually Looks Like</h2>
+        <p class="text-slate-400 max-w-2xl mx-auto text-base leading-relaxed">
+          The Corelytics platform connects directly to the ERP you already own and replaces every manual reporting step with automated, executive-grade intelligence delivered before the trading day begins.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+        <div class="gradient-card rounded-2xl p-7 neon-border hover:neon-glow transition-all duration-300" style="--tw-shadow: 0 0 30px rgba(0,245,160,0.2);">
+          <div class="w-12 h-12 rounded-xl neon-border mb-5 flex items-center justify-center">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#00f5a0" stroke-width="1.5">
+              <path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/>
+            </svg>
+          </div>
+          <h3 class="text-white font-bold text-lg mb-3">Corelytics CompanyPulse</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">A daily executive briefing delivered before 7am that covers cash position, AR aging movement, revenue versus prior period, and margin trends by business unit. No login required. No manual extraction. The numbers arrive before your first meeting.</p>
+        </div>
+
+        <div class="gradient-card rounded-2xl p-7 neon-border hover:neon-glow transition-all duration-300">
+          <div class="w-12 h-12 rounded-xl neon-border mb-5 flex items-center justify-center">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#00f5a0" stroke-width="1.5">
+              <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+            </svg>
+          </div>
+          <h3 class="text-white font-bold text-lg mb-3">Corelytics Scenario Modeling</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">Before you commit to a price increase, a headcount addition, or a payment delay on a major vendor, run the model. Test the cash impact of a 5 percent price increase against three demand scenarios. Evaluate a $180,000 headcount addition against your 90-day cash runway. Decide with data, not instinct.</p>
+        </div>
+
+        <div class="gradient-card rounded-2xl p-7 neon-border hover:neon-glow transition-all duration-300">
+          <div class="w-12 h-12 rounded-xl neon-border mb-5 flex items-center justify-center">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#00f5a0" stroke-width="1.5">
+              <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+            </svg>
+          </div>
+          <h3 class="text-white font-bold text-lg mb-3">Corelytics Automated Risk Detection</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">Continuous anomaly detection against your live operational data. Threshold alerts fire the moment a margin line breaks below your floor, an AR balance exceeds aging thresholds, or a critical ratio approaches a defined limit. You get the signal in hours, not weeks.</p>
+        </div>
+      </div>
+
+      <!-- NAICS Benchmarking callout -->
+      <div class="gradient-card rounded-2xl p-8 neon-border-strong neon-glow">
+        <div class="flex flex-col md:flex-row items-start md:items-center gap-6">
+          <div class="flex-1">
+            <h3 class="text-white font-bold text-xl mb-3">Industry Benchmarking at the NAICS Sub-Group Level</h3>
+            <p class="text-slate-400 text-sm leading-relaxed">
+              Generic industry benchmarks are averages across companies of every size, geography, and business model. Corelytics delivers benchmarks at the NAICS industry sub-group level for businesses in your specific revenue band. When your DSO is 58 days, you need to know whether the 50th percentile for a specialty manufacturer in your revenue range is 42 or 65 days. That is the number that tells you whether you have a collections problem.
+            </p>
+          </div>
+          <div class="flex-shrink-0">
+            <a href="#form" class="cta-btn inline-block font-bold px-8 py-3.5 rounded-xl transition-all duration-200 cursor-pointer text-sm whitespace-nowrap">
+              Run Your Diagnostic
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Integration Trust Badges -->
+  <section class="py-16 px-6">
+    <div class="max-w-6xl mx-auto">
+      <p class="text-center text-xs font-semibold tracking-widest text-slate-500 uppercase mb-10">Direct Integration With Your Existing Stack</p>
+      <div class="flex flex-wrap justify-center gap-3">
+        <div class="erp-badge px-4 py-2.5 rounded-lg text-slate-300 text-sm font-medium">MS Dynamics 365</div>
+        <div class="erp-badge px-4 py-2.5 rounded-lg text-slate-300 text-sm font-medium">Acumatica</div>
+        <div class="erp-badge px-4 py-2.5 rounded-lg text-slate-300 text-sm font-medium">Infor M3 / M4</div>
+        <div class="erp-badge px-4 py-2.5 rounded-lg text-slate-300 text-sm font-medium">Sage 100 / 300</div>
+        <div class="erp-badge px-4 py-2.5 rounded-lg text-slate-300 text-sm font-medium">Vista by Viewpoint</div>
+        <div class="erp-badge px-4 py-2.5 rounded-lg text-slate-300 text-sm font-medium">QuickBooks Enterprise</div>
+        <div class="erp-badge px-4 py-2.5 rounded-lg text-slate-300 text-sm font-medium">QuickBooks Desktop</div>
+        <div class="erp-badge px-4 py-2.5 rounded-lg text-slate-300 text-sm font-medium">QuickBooks Online</div>
+        <div class="erp-badge px-4 py-2.5 rounded-lg text-slate-300 text-sm font-medium">Salesforce</div>
+        <div class="erp-badge px-4 py-2.5 rounded-lg text-slate-300 text-sm font-medium">BambooHR</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Lead Capture Form -->
+  <section id="form" class="py-20 px-6">
+    <div class="max-w-2xl mx-auto">
+      <div class="gradient-card rounded-3xl p-8 sm:p-12 neon-border-strong neon-glow">
+        <div class="text-center mb-10">
+          <div class="badge-pill inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium neon-text mb-6">
+            <span class="w-2 h-2 rounded-full bg-current"></span>
+            12-Question Revenue Leak Diagnostic
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-black text-white mb-4">Access the 12-Question Diagnostic</h2>
+          <p class="text-slate-400 text-sm leading-relaxed">
+            The diagnostic scores your business across four categories: reporting latency, cash flow visibility, risk monitoring, and benchmarking gap. Output includes a dollar-range estimate of annual leakage based on your revenue tier and industry sector.
+          </p>
+        </div>
+
+        <form class="space-y-5" onsubmit="return false;">
+          <div>
+            <label class="block text-sm font-semibold text-slate-300 mb-2">Full Name</label>
+            <input type="text" placeholder="Alex Johnson" class="form-input w-full px-4 py-3.5 rounded-xl text-sm transition-all duration-200" />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-slate-300 mb-2">Work Email</label>
+            <input type="email" placeholder="alex@company.com" class="form-input w-full px-4 py-3.5 rounded-xl text-sm transition-all duration-200" />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-slate-300 mb-2">Current ERP / Accounting System</label>
+            <select class="form-input w-full px-4 py-3.5 rounded-xl text-sm transition-all duration-200 cursor-pointer appearance-none">
+              <option value="" disabled selected>Select your primary system</option>
+              <option>MS Dynamics 365</option>
+              <option>Acumatica</option>
+              <option>Infor M3 / M4</option>
+              <option>Sage 100</option>
+              <option>Sage 300</option>
+              <option>Vista by Viewpoint</option>
+              <option>QuickBooks Enterprise</option>
+              <option>QuickBooks Desktop</option>
+              <option>QuickBooks Online</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <button type="submit" class="cta-btn w-full font-bold text-base py-4 rounded-xl transition-all duration-200 cursor-pointer mt-2">
+            Access the 12-Question Diagnostic
+          </button>
+          <p class="text-xs text-slate-600 text-center">
+            Your data is used only to personalize your diagnostic output and connect you with a Corelytics specialist. No third-party sharing.
+          </p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-10 px-6" style="border-top: 1px solid rgba(0,245,160,0.08);">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <div class="w-6 h-6 rounded neon-border flex items-center justify-center">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
+            <path d="M2 12L6 6L10 9L14 3" stroke="#00f5a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span class="text-slate-400 text-sm font-medium">Corelytics Financial Intelligence</span>
+      </div>
+      <p class="text-slate-600 text-xs">2026 Corelytics. All rights reserved. Built for mid-market operators running $10M to $200M in annual revenue.</p>
+    </div>
+  </footer>
+
+</body>
+</html>
